@@ -1,3 +1,22 @@
+- main = this
+
 %button Load Issues
-  - on "click", ->
-    - @repo.issues()
+  - on "click", @load
+
+%ul
+  - each @issues, (issue) ->
+    %li
+      %h3= issue.title
+      %p= issue.body
+
+%label
+  %h3 Title
+  %input
+    - on "change", @title
+
+%label
+  %textarea
+    - on "change", @body
+
+%button Create
+  - on "click", @createIssue

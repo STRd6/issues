@@ -61,3 +61,8 @@
 
       issues: ->
         api "issues"
+
+      createIssue: (params) ->
+        api "issues",
+          type: "POST"
+          data: params

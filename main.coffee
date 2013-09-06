@@ -13,14 +13,34 @@ currentNode = ->
 # The root is the node that contains the script file.
 $root = $(currentNode())
 
+# Apply our styles
+if styleContent = distribution["style.css"]?.content
+  $root.append $("<style>",
+    html: styleContent
+  )
+
 squire = GitSquire()
 squire.onload()
 
 repo = squire.Repo
   owner: "STRd6"
   repo: "issues"
+  
+issues = Observable []
 
 $root
   .append(HAMLjr.templates.main(
-    repo: repo
+    load: ->
+      repo.issues().then issues
+
+    issues: issues
+    title: Observable ""
+    body: Observable ""
+    createIssue: ->
+      repo.createIssue
+        title: @title()
+        body: @body()
+
+      @body("")
+      @title("")
   ))
