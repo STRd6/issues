@@ -7,5 +7,3 @@ Goal
 ----
 
 Display a little issues widget on a page.
-
-Radical!
