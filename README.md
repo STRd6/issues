@@ -6,6 +6,6 @@ Github's got issues
 Goal
 ----
 
-Display a little issues widget on a page.
+Currently just a testing ground for the editor.
 
-Radical!
+Maybe one day use to display a little issues widget on a page.
