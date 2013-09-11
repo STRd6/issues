@@ -7,7 +7,7 @@ see how it goes.
     @Issues = (I={}) ->
       Object.defaults I,
         issues: []
-    
+
       self = Model(I)
 
 Our `issues` method is a list of `Issue` models.
