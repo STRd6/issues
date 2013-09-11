@@ -6,6 +6,6 @@ Github's got issues
 Goal
 ----
 
-Currently just a testing ground for the editor.
+Currently just provides a dropdown list for choosing an issue from.
 
-Maybe one day use to display a little issues widget on a page.
+May later expand to forms to create/show/comment on issues for a project.
