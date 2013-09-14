@@ -1,10 +1,12 @@
+    Issue = require "./Issue"
+
 A collection of issues including a `currentIssue` to represent the actively
 selected issue.
 
 We may want to formalize this collection pattern later, but for now lets just
 see how it goes.
 
-    @Issues = (I={}) ->
+    Issues = (I={}) ->
       Object.defaults I,
         issues: []
 
@@ -29,3 +31,5 @@ selected issue.
           self.issues issueData.map(Issue)
     
       return self
+
+    module.exports = Issues

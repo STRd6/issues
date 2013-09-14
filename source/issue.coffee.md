@@ -1,6 +1,6 @@
 A tempest model that wraps issues from github.
 
-    @Issue = (I={}) ->
+    Issue = (I={}) ->
       self = Model(I)
     
       self.extend
@@ -24,3 +24,5 @@ their own branches, but an issue branch is generated based on issue number.
           I.head?.ref or "issue-#{I.number}"
     
       return self
+
+    module.exports = Issue
