@@ -6,7 +6,6 @@
 <script class="env" src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
 <script class="env" src="http://strd6.github.io/tempest/javascripts/envweb.js"></script>
 <script class="env" src="http://strd6.github.io/sandbox/master.js"></script>
-<script class="env" src="http://strd6.github.io/issues/master.js"></script>
 <script class="env" src="http://strd6.github.io/tests/master.js"></script>
 <script class="env" src="http://strd6.github.io/require/master.js?11"></script>
 </head>
@@ -17,6 +16,12 @@
       "path": "README.md",
       "mode": "100644",
       "content": "issues\n======\n\nGithub's got issues\n\nGoal\n----\n\nCurrently just provides a dropdown list for choosing an issue from.\n\nMay later expand to forms to create/show/comment on issues for a project.\n",
+      "type": "blob"
+    },
+    "main.coffee.md": {
+      "path": "main.coffee.md",
+      "mode": "100644",
+      "content": "Our main entry point which exports all of our Issue models and templates.\n\n    module.exports =\n      models:\n        Issue: require(\"./source/issue\")\n        Issues: require(\"./source/issue\")\n      templates:\n        issues: require(\"./templates/issues\")\n",
       "type": "blob"
     },
     "source/issue.coffee.md": {
@@ -36,15 +41,14 @@
       "mode": "100644",
       "content": "A simple select element to allow choosing of issues.\n\n    %select\n      - on \"change\", @currentIssue\n      %option= \"- Default Branch -\"\n      - each @issues, ->\n        %option= @optionText()\n",
       "type": "blob"
-    },
-    "main.coffee.md": {
-      "path": "main.coffee.md",
-      "mode": "100644",
-      "content": "Our main entry point which exports all of our Issue models and templates.\n\n    module.exports =\n      models:\n        Issue: require(\"./source/issue\")\n        Issues: require(\"./source/issue\")\n      templates:\n        issues: require(\"./templates/issues\")\n",
-      "type": "blob"
     }
   },
   "distribution": {
+    "main": {
+      "path": "main",
+      "content": "(function() {\n  module.exports = {\n    models: {\n      Issue: require(\"./source/issue\"),\n      Issues: require(\"./source/issue\")\n    },\n    templates: {\n      issues: require(\"./templates/issues\")\n    }\n  };\n\n}).call(this);\n",
+      "type": "blob"
+    },
     "source/issue": {
       "path": "source/issue",
       "content": "(function() {\n  var Issue;\n\n  Issue = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    self = Model(I);\n    self.extend({\n      optionText: function() {\n        return \"\" + I.title;\n      },\n      fullDescription: function() {\n        return \"\" + (self.optionText()) + \"\\n\" + I.html_url + \"\\n\" + I.body;\n      },\n      branchName: function() {\n        var _ref;\n        return ((_ref = I.head) != null ? _ref.ref : void 0) || (\"issue-\" + I.number);\n      }\n    });\n    return self;\n  };\n\n  module.exports = Issue;\n\n}).call(this);\n",
@@ -57,12 +61,7 @@
     },
     "templates/issues": {
       "path": "templates/issues",
-      "content": "(HAMLjr.templates || (HAMLjr.templates = {}))[\"templates/issues\"] = (function(data) {\n  return (function() {\n    var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"select\");\n    __push(__element);\n    __on(\"change\", this.currentIssue);\n    __element = document.createElement(\"option\");\n    __push(__element);\n    __element = document.createTextNode('');\n    __text(__element, \"- Default Branch -\");\n    __push(__element);\n    __pop();\n    __pop();\n    __each(this.issues, function() {\n      __element = document.createElement(\"option\");\n      __push(__element);\n      __element = document.createTextNode('');\n      __text(__element, this.optionText());\n      __push(__element);\n      __pop();\n      return __pop();\n    });\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
-      "type": "blob"
-    },
-    "main": {
-      "path": "main",
-      "content": "(function() {\n  module.exports = {\n    models: {\n      Issue: require(\"./source/issue\"),\n      Issues: require(\"./source/issue\")\n    },\n    templates: {\n      issues: require(\"./templates/issues\")\n    }\n  };\n\n}).call(this);\n",
+      "content": "module.exports = (function(data) {\n  return (function() {\n    var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"select\");\n    __push(__element);\n    __on(\"change\", this.currentIssue);\n    __element = document.createElement(\"option\");\n    __push(__element);\n    __element = document.createTextNode('');\n    __text(__element, \"- Default Branch -\");\n    __push(__element);\n    __pop();\n    __pop();\n    __each(this.issues, function() {\n      __element = document.createElement(\"option\");\n      __push(__element);\n      __element = document.createTextNode('');\n      __text(__element, this.optionText());\n      __push(__element);\n      __pop();\n      return __pop();\n    });\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
       "type": "blob"
     }
   },
@@ -76,18 +75,6 @@
     "url": "http://strd6.github.io/editor/"
   }
 };</script>
-<script>(function() {
-  module.exports = {
-    models: {
-      Issue: require("./source/issue"),
-      Issues: require("./source/issue")
-    },
-    templates: {
-      issues: require("./templates/issues")
-    }
-  };
-
-}).call(this);
-</script>
+<script>require('./main')</script>
 </body>
 </html>
