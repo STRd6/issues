@@ -14,7 +14,7 @@ see how it goes.
 
 Our `issues` method is a list of `Issue` models.
 
-      self.attrModels "issues"
+      self.attrModels "issues", Issue
 
 We want to expose the currently selected issue as an observable as well.
 
