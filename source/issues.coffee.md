@@ -1,4 +1,4 @@
-    Issue = require "./Issue"
+    Issue = require "./issue"
 
 A collection of issues including a `currentIssue` to represent the actively
 selected issue.
