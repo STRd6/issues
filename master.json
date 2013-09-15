@@ -1,0 +1,65 @@
+{
+  "source": {
+    "README.md": {
+      "path": "README.md",
+      "mode": "100644",
+      "content": "issues\n======\n\nGithub's got issues\n\nGoal\n----\n\nCurrently just provides a dropdown list for choosing an issue from.\n\nMay later expand to forms to create/show/comment on issues for a project.\n",
+      "type": "blob"
+    },
+    "main.coffee.md": {
+      "path": "main.coffee.md",
+      "mode": "100644",
+      "content": "Our main entry point which exports all of our Issue models and templates.\n\n    module.exports =\n      models:\n        Issue: require(\"./source/issue\")\n        Issues: require(\"./source/issue\")\n      templates:\n        issues: require(\"./templates/issues\")\n",
+      "type": "blob"
+    },
+    "source/issue.coffee.md": {
+      "path": "source/issue.coffee.md",
+      "mode": "100644",
+      "content": "A tempest model that wraps issues from github.\n\n    Issue = (I={}) ->\n      self = Model(I)\n    \n      self.extend\n\nThe option text is what appears in the dropdown menu.\n\n        optionText: ->\n          \"#{I.title}\"\n\n        fullDescription: ->\n          \"\"\"\n            #{self.optionText()}\n            #{I.html_url}\n            #{I.body}\n          \"\"\"\n\nA helper method to get a standard branch name for an issue. Pull requests have\ntheir own branches, but an issue branch is generated based on issue number.\n\n        branchName: ->\n          I.head?.ref or \"issue-#{I.number}\"\n    \n      return self\n\n    module.exports = Issue\n",
+      "type": "blob"
+    },
+    "source/issues.coffee.md": {
+      "path": "source/issues.coffee.md",
+      "mode": "100644",
+      "content": "    Issue = require \"./Issue\"\n\nA collection of issues including a `currentIssue` to represent the actively\nselected issue.\n\nWe may want to formalize this collection pattern later, but for now lets just\nsee how it goes.\n\n    Issues = (I={}) ->\n      Object.defaults I,\n        issues: []\n\n      self = Model(I)\n\nOur `issues` method is a list of `Issue` models.\n\n      self.attrModels \"issues\"\n\nWe want to expose the currently selected issue as an observable as well.\n\n      self.attrObservable \"currentIssue\"\n\n      self.extend\n\nThe reset method accepts an array of raw issue data, converts it into an array\nof issue objects, replaces the previous issues with the new ones and clears the \nselected issue.\n\n        reset: (issueData) ->\n          self.currentIssue(undefined)\n          self.issues issueData.map(Issue)\n    \n      return self\n\n    module.exports = Issues\n",
+      "type": "blob"
+    },
+    "templates/issues.haml.md": {
+      "path": "templates/issues.haml.md",
+      "mode": "100644",
+      "content": "A simple select element to allow choosing of issues.\n\n    %select\n      - on \"change\", @currentIssue\n      %option= \"- Default Branch -\"\n      - each @issues, ->\n        %option= @optionText()\n",
+      "type": "blob"
+    }
+  },
+  "distribution": {
+    "main": {
+      "path": "main",
+      "content": "(function() {\n  module.exports = {\n    models: {\n      Issue: require(\"./source/issue\"),\n      Issues: require(\"./source/issue\")\n    },\n    templates: {\n      issues: require(\"./templates/issues\")\n    }\n  };\n\n}).call(this);\n",
+      "type": "blob"
+    },
+    "source/issue": {
+      "path": "source/issue",
+      "content": "(function() {\n  var Issue;\n\n  Issue = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    self = Model(I);\n    self.extend({\n      optionText: function() {\n        return \"\" + I.title;\n      },\n      fullDescription: function() {\n        return \"\" + (self.optionText()) + \"\\n\" + I.html_url + \"\\n\" + I.body;\n      },\n      branchName: function() {\n        var _ref;\n        return ((_ref = I.head) != null ? _ref.ref : void 0) || (\"issue-\" + I.number);\n      }\n    });\n    return self;\n  };\n\n  module.exports = Issue;\n\n}).call(this);\n",
+      "type": "blob"
+    },
+    "source/issues": {
+      "path": "source/issues",
+      "content": "(function() {\n  var Issue, Issues;\n\n  Issue = require(\"./Issue\");\n\n  Issues = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    Object.defaults(I, {\n      issues: []\n    });\n    self = Model(I);\n    self.attrModels(\"issues\");\n    self.attrObservable(\"currentIssue\");\n    self.extend({\n      reset: function(issueData) {\n        self.currentIssue(void 0);\n        return self.issues(issueData.map(Issue));\n      }\n    });\n    return self;\n  };\n\n  module.exports = Issues;\n\n}).call(this);\n",
+      "type": "blob"
+    },
+    "templates/issues": {
+      "path": "templates/issues",
+      "content": "module.exports = (function(data) {\n  return (function() {\n    var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"select\");\n    __push(__element);\n    __on(\"change\", this.currentIssue);\n    __element = document.createElement(\"option\");\n    __push(__element);\n    __element = document.createTextNode('');\n    __text(__element, \"- Default Branch -\");\n    __push(__element);\n    __pop();\n    __pop();\n    __each(this.issues, function() {\n      __element = document.createElement(\"option\");\n      __push(__element);\n      __element = document.createTextNode('');\n      __text(__element, this.optionText());\n      __push(__element);\n      __pop();\n      return __pop();\n    });\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
+      "type": "blob"
+    }
+  },
+  "entryPoint": "main",
+  "dependencies": {},
+  "repository": {
+    "full_name": "STRd6/issues",
+    "branch": "master"
+  },
+  "progenitor": {
+    "url": "http://strd6.github.io/editor/"
+  }
+}
