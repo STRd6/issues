@@ -2,7 +2,7 @@ A tempest model that wraps issues from github.
 
     Issue = (I={}) ->
       self = Model(I)
-    
+
       self.extend
 
 The option text is what appears in the dropdown menu.
@@ -22,7 +22,7 @@ their own branches, but an issue branch is generated based on issue number.
 
         branchName: ->
           I.head?.ref or "issue-#{I.number}"
-    
+
       return self
 
     module.exports = Issue

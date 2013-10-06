@@ -23,13 +23,13 @@ We want to expose the currently selected issue as an observable as well.
       self.extend
 
 The reset method accepts an array of raw issue data, converts it into an array
-of issue objects, replaces the previous issues with the new ones and clears the 
+of issue objects, replaces the previous issues with the new ones and clears the
 selected issue.
 
         reset: (issueData) ->
           self.currentIssue(undefined)
           self.issues issueData.map(Issue)
-    
+
       return self
 
     module.exports = Issues
