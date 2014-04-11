@@ -1,2 +1,5 @@
-version: "0.2.0"
+version: "0.2.1-pre.0"
 entryPoint: "main"
+dependencies:
+  composition: "distri/compositions:v0.1.1"
+  util: "distri/util:v0.1.0"

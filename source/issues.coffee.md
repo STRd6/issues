@@ -1,3 +1,9 @@
+Issues
+======
+
+    Composition = require "composition"
+    {defaults} = require "util"
+
     Issue = require "./issue"
 
 A collection of issues including a `currentIssue` to represent the actively
@@ -7,10 +13,10 @@ We may want to formalize this collection pattern later, but for now lets just
 see how it goes.
 
     Issues = (I={}) ->
-      Object.defaults I,
+      defaults I,
         issues: []
 
-      self = Model(I)
+      self = Composition(I)
 
 Our `issues` method is a list of `Issue` models.
 
