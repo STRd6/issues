@@ -15,11 +15,11 @@ window["distri/issues:v0.2.1-pre.0"]({
     "main.coffee.md": {
       "mode": "100644",
       "type": "blob",
-      "sha": "f0f40a1e37ce60bbcbf35d2ebb342d69cf8ee5fd",
+      "sha": "fc85212e24f0ab2b16bdd58c2728d9b135cc363d",
       "path": "main.coffee.md",
       "size": 257,
       "url": "https://api.github.com/repos/distri/issues/git/blobs/f0f40a1e37ce60bbcbf35d2ebb342d69cf8ee5fd",
-      "content": "Our main entry point which exports all of our Issue models and templates.\n\n    module.exports =\n      models:\n        Issue: require(\"./source/issue\")\n        Issues: require(\"./source/issues\")\n      templates:\n        issues: require(\"./templates/issues\")\n",
+      "content": "Our main entry point which exports all of our Issue models and templates.\n\n    module.exports =\n      models:\n        Issue: require(\"./issue\")\n        Issues: require(\"./issues\")\n      templates:\n        issues: require(\"./templates/issues\")\n",
       "encoding": "raw",
       "modified": false,
       "initialSha": "f0f40a1e37ce60bbcbf35d2ebb342d69cf8ee5fd"
@@ -27,38 +27,14 @@ window["distri/issues:v0.2.1-pre.0"]({
     "pixie.cson": {
       "mode": "100644",
       "type": "blob",
-      "sha": "43fbf42cd3d57e81bdef071948b21e548a132341",
+      "sha": "3be01657c55fc56b12eee77c2cf24968ac9d7644",
       "path": "pixie.cson",
       "size": 36,
       "url": "https://api.github.com/repos/distri/issues/git/blobs/f34f7d5a0815048ed1677f9cbf2ca854eb3d5336",
-      "content": "version: \"0.2.1-pre.0\"\nentryPoint: \"main\"\ndependencies:\n  composition: \"distri/compositions:v0.1.1\"\n  util: \"distri/util:v0.1.0\"\n",
+      "content": "version: \"0.2.1-pre.1\"\nentryPoint: \"main\"\ndependencies:\n  composition: \"distri/compositions:v0.1.1\"\n  util: \"distri/util:v0.1.0\"\n",
       "encoding": "raw",
       "modified": false,
       "initialSha": "f34f7d5a0815048ed1677f9cbf2ca854eb3d5336"
-    },
-    "source/issue.coffee.md": {
-      "mode": "100644",
-      "type": "blob",
-      "sha": "b69cc17d56083a05e38aeeb898c4281f9e934bd8",
-      "path": "source/issue.coffee.md",
-      "size": 623,
-      "url": "https://api.github.com/repos/distri/issues/git/blobs/bdb5f8df09604e9afced32c540ce690dcb5ab4b8",
-      "content": "Issue\n=====\n\n    Composition = require \"composition\"\n\nA tempest model that wraps issues from github.\n\n    module.exports = (I={}) ->\n      self = Composition(I)\n\n      self.extend\n\nThe option text is what appears in the dropdown menu.\n\n        optionText: ->\n          \"#{I.title}\"\n\n        fullDescription: ->\n          \"\"\"\n            #{self.optionText()}\n            #{I.html_url}\n            #{I.body}\n          \"\"\"\n\nA helper method to get a standard branch name for an issue. Pull requests have\ntheir own branches, but an issue branch is generated based on issue number.\n\n        branchName: ->\n          I.head?.ref or \"issue-#{I.number}\"\n\n      return self\n",
-      "encoding": "raw",
-      "modified": false,
-      "initialSha": "bdb5f8df09604e9afced32c540ce690dcb5ab4b8"
-    },
-    "source/issues.coffee.md": {
-      "mode": "100644",
-      "type": "blob",
-      "sha": "5fb6df8b50876334c573ff9fe30af10b82155e99",
-      "path": "source/issues.coffee.md",
-      "size": 871,
-      "url": "https://api.github.com/repos/distri/issues/git/blobs/8687cc29c33678f577d15b4d0757ba7d687a6ea4",
-      "content": "Issues\n======\n\n    Composition = require \"composition\"\n    {defaults} = require \"util\"\n\n    Issue = require \"./issue\"\n\nA collection of issues including a `currentIssue` to represent the actively\nselected issue.\n\nWe may want to formalize this collection pattern later, but for now lets just\nsee how it goes.\n\n    Issues = (I={}) ->\n      defaults I,\n        issues: []\n\n      self = Composition(I)\n\nOur `issues` method is a list of `Issue` models.\n\n      self.attrModels \"issues\", Issue\n\nWe want to expose the currently selected issue as an observable as well.\n\n      self.attrObservable \"currentIssue\"\n\n      self.extend\n\nThe reset method accepts an array of raw issue data, converts it into an array\nof issue objects, replaces the previous issues with the new ones and clears the\nselected issue.\n\n        reset: (issueData) ->\n          self.currentIssue(undefined)\n          self.issues issueData.map(Issue)\n\n      return self\n\n    module.exports = Issues\n",
-      "encoding": "raw",
-      "modified": false,
-      "initialSha": "8687cc29c33678f577d15b4d0757ba7d687a6ea4"
     },
     "templates/issues.haml.md": {
       "mode": "100644",
@@ -74,31 +50,35 @@ window["distri/issues:v0.2.1-pre.0"]({
     },
     "test/issues.coffee": {
       "path": "test/issues.coffee",
-      "content": "Issues = require \"../source/issues\"\n\ndescribe \"issues\", ->\n  it \"should be chill\", ->\n    assert Issues()\n",
+      "content": "Issues = require \"../issues\"\n\ndescribe \"issues\", ->\n  it \"should be chill\", ->\n    assert Issues()\n\ndescribe \"main\", ->\n  it \"should have stuff\", ->\n    {models:{Issue, Issues}} = require \"../main\"\n\n    assert Issue\n    assert Issues\n",
       "modified": false,
       "mode": "100644",
-      "sha": "cb7e564225785bf0b76aeb6543c5fc61ce3b8a33"
+      "sha": "7d237855f7e0dc2bc3823be30627f1d506da69d1"
+    },
+    "issue.coffee.md": {
+      "path": "issue.coffee.md",
+      "content": "Issue\n=====\n\n    Composition = require \"composition\"\n\nA tempest model that wraps issues from github.\n\n    module.exports = (I={}) ->\n      self = Composition(I)\n\n      self.extend\n\nThe option text is what appears in the dropdown menu.\n\n        optionText: ->\n          \"#{I.title}\"\n\n        fullDescription: ->\n          \"\"\"\n            #{self.optionText()}\n            #{I.html_url}\n            #{I.body}\n          \"\"\"\n\nA helper method to get a standard branch name for an issue. Pull requests have\ntheir own branches, but an issue branch is generated based on issue number.\n\n        branchName: ->\n          I.head?.ref or \"issue-#{I.number}\"\n\n      return self\n",
+      "modified": false,
+      "mode": "100644",
+      "sha": "b69cc17d56083a05e38aeeb898c4281f9e934bd8"
+    },
+    "issues.coffee.md": {
+      "path": "issues.coffee.md",
+      "content": "Issues\n======\n\n    Composition = require \"composition\"\n    {defaults} = require \"util\"\n\n    Issue = require \"./issue\"\n\nA collection of issues including a `currentIssue` to represent the actively\nselected issue.\n\nWe may want to formalize this collection pattern later, but for now lets just\nsee how it goes.\n\n    Issues = (I={}) ->\n      defaults I,\n        issues: []\n\n      self = Composition(I)\n\nOur `issues` method is a list of `Issue` models.\n\n      self.attrModels \"issues\", Issue\n\nWe want to expose the currently selected issue as an observable as well.\n\n      self.attrObservable \"currentIssue\"\n\n      self.extend\n\nThe reset method accepts an array of raw issue data, converts it into an array\nof issue objects, replaces the previous issues with the new ones and clears the\nselected issue.\n\n        reset: (issueData) ->\n          self.currentIssue(undefined)\n          self.issues issueData.map(Issue)\n\n      return self\n\n    module.exports = Issues\n",
+      "modified": false,
+      "mode": "100644",
+      "sha": "5fb6df8b50876334c573ff9fe30af10b82155e99"
     }
   },
   "distribution": {
     "main": {
       "path": "main",
-      "content": "(function() {\n  module.exports = {\n    models: {\n      Issue: require(\"./source/issue\"),\n      Issues: require(\"./source/issues\")\n    },\n    templates: {\n      issues: require(\"./templates/issues\")\n    }\n  };\n\n}).call(this);\n",
+      "content": "(function() {\n  module.exports = {\n    models: {\n      Issue: require(\"./issue\"),\n      Issues: require(\"./issues\")\n    },\n    templates: {\n      issues: require(\"./templates/issues\")\n    }\n  };\n\n}).call(this);\n",
       "type": "blob"
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.2.1-pre.0\",\"entryPoint\":\"main\",\"dependencies\":{\"composition\":\"distri/compositions:v0.1.1\",\"util\":\"distri/util:v0.1.0\"}};",
-      "type": "blob"
-    },
-    "source/issue": {
-      "path": "source/issue",
-      "content": "(function() {\n  var Composition;\n\n  Composition = require(\"composition\");\n\n  module.exports = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    self = Composition(I);\n    self.extend({\n      optionText: function() {\n        return \"\" + I.title;\n      },\n      fullDescription: function() {\n        return \"\" + (self.optionText()) + \"\\n\" + I.html_url + \"\\n\" + I.body;\n      },\n      branchName: function() {\n        var _ref;\n        return ((_ref = I.head) != null ? _ref.ref : void 0) || (\"issue-\" + I.number);\n      }\n    });\n    return self;\n  };\n\n}).call(this);\n",
-      "type": "blob"
-    },
-    "source/issues": {
-      "path": "source/issues",
-      "content": "(function() {\n  var Composition, Issue, Issues, defaults;\n\n  Composition = require(\"composition\");\n\n  defaults = require(\"util\").defaults;\n\n  Issue = require(\"./issue\");\n\n  Issues = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    defaults(I, {\n      issues: []\n    });\n    self = Composition(I);\n    self.attrModels(\"issues\", Issue);\n    self.attrObservable(\"currentIssue\");\n    self.extend({\n      reset: function(issueData) {\n        self.currentIssue(void 0);\n        return self.issues(issueData.map(Issue));\n      }\n    });\n    return self;\n  };\n\n  module.exports = Issues;\n\n}).call(this);\n",
+      "content": "module.exports = {\"version\":\"0.2.1-pre.1\",\"entryPoint\":\"main\",\"dependencies\":{\"composition\":\"distri/compositions:v0.1.1\",\"util\":\"distri/util:v0.1.0\"}};",
       "type": "blob"
     },
     "templates/issues": {
@@ -108,7 +88,17 @@ window["distri/issues:v0.2.1-pre.0"]({
     },
     "test/issues": {
       "path": "test/issues",
-      "content": "(function() {\n  var Issues;\n\n  Issues = require(\"../source/issues\");\n\n  describe(\"issues\", function() {\n    return it(\"should be chill\", function() {\n      return assert(Issues());\n    });\n  });\n\n}).call(this);\n",
+      "content": "(function() {\n  var Issues;\n\n  Issues = require(\"../issues\");\n\n  describe(\"issues\", function() {\n    return it(\"should be chill\", function() {\n      return assert(Issues());\n    });\n  });\n\n  describe(\"main\", function() {\n    return it(\"should have stuff\", function() {\n      var Issue, _ref;\n      _ref = require(\"../main\").models, Issue = _ref.Issue, Issues = _ref.Issues;\n      assert(Issue);\n      return assert(Issues);\n    });\n  });\n\n}).call(this);\n",
+      "type": "blob"
+    },
+    "issue": {
+      "path": "issue",
+      "content": "(function() {\n  var Composition;\n\n  Composition = require(\"composition\");\n\n  module.exports = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    self = Composition(I);\n    self.extend({\n      optionText: function() {\n        return \"\" + I.title;\n      },\n      fullDescription: function() {\n        return \"\" + (self.optionText()) + \"\\n\" + I.html_url + \"\\n\" + I.body;\n      },\n      branchName: function() {\n        var _ref;\n        return ((_ref = I.head) != null ? _ref.ref : void 0) || (\"issue-\" + I.number);\n      }\n    });\n    return self;\n  };\n\n}).call(this);\n",
+      "type": "blob"
+    },
+    "issues": {
+      "path": "issues",
+      "content": "(function() {\n  var Composition, Issue, Issues, defaults;\n\n  Composition = require(\"composition\");\n\n  defaults = require(\"util\").defaults;\n\n  Issue = require(\"./issue\");\n\n  Issues = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    defaults(I, {\n      issues: []\n    });\n    self = Composition(I);\n    self.attrModels(\"issues\", Issue);\n    self.attrObservable(\"currentIssue\");\n    self.extend({\n      reset: function(issueData) {\n        self.currentIssue(void 0);\n        return self.issues(issueData.map(Issue));\n      }\n    });\n    return self;\n  };\n\n  module.exports = Issues;\n\n}).call(this);\n",
       "type": "blob"
     },
     "_lib/hamljr_runtime": {
@@ -120,7 +110,7 @@ window["distri/issues:v0.2.1-pre.0"]({
   "progenitor": {
     "url": "http://strd6.github.io/editor/"
   },
-  "version": "0.2.1-pre.0",
+  "version": "0.2.1-pre.1",
   "entryPoint": "main",
   "repository": {
     "id": 12632346,
