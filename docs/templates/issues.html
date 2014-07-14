@@ -21,8 +21,7 @@
               <p>A simple select element to allow choosing of issues.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-haml">%select
-  - on &quot;change&quot;, @currentIssue
+            <div class="content"><pre><code class="lang-haml">%select(value=@currentIssue)
   %option= &quot;- Default Branch -&quot;
   - each @issues, -&gt;
     %option= @optionText()</code></pre>
