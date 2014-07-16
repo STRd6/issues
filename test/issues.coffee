@@ -1,4 +1,4 @@
-Issues = require "../issues"
+{models:{Issue, Issues}} = require "../main"
 
 describe "issues", ->
   it "should be chill", ->
@@ -6,7 +6,9 @@ describe "issues", ->
 
 describe "main", ->
   it "should have stuff", ->
-    {models:{Issue, Issues}} = require "../main"
-
     assert Issue
     assert Issues
+
+describe "Issue", ->
+  it "should have a full description", ->
+    assert Issue().fullDescription()

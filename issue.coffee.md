@@ -17,7 +17,7 @@ This is what appears in the dropdown menu.
 
         fullDescription: ->
           """
-            #{self.optionText()}
+            #{self.toString()}
             #{I.html_url}
             #{I.body}
           """
