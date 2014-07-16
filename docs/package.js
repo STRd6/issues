@@ -174,7 +174,7 @@
     },
     "issue.coffee.md": {
       "path": "issue.coffee.md",
-      "content": "Issue\n=====\n\n    Composition = require \"composition\"\n\nA tempest model that wraps issues from github.\n\n    module.exports = (I={}) ->\n      self = Composition(I)\n\n      self.extend\n\nThis is what appears in the dropdown menu.\n\n        toString: ->\n          I.title\n\n        fullDescription: ->\n          \"\"\"\n            #{self.optionText()}\n            #{I.html_url}\n            #{I.body}\n          \"\"\"\n\nA helper method to get a standard branch name for an issue. Pull requests have\ntheir own branches, but an issue branch is generated based on issue number.\n\n        branchName: ->\n          I.head?.ref or \"issue-#{I.number}\"\n\n      return self\n",
+      "content": "Issue\n=====\n\n    Composition = require \"composition\"\n\nA tempest model that wraps issues from github.\n\n    module.exports = (I={}) ->\n      self = Composition(I)\n\n      self.extend\n\nThis is what appears in the dropdown menu.\n\n        toString: ->\n          I.title\n\n        fullDescription: ->\n          \"\"\"\n            #{self.toString()}\n            #{I.html_url}\n            #{I.body}\n          \"\"\"\n\nA helper method to get a standard branch name for an issue. Pull requests have\ntheir own branches, but an issue branch is generated based on issue number.\n\n        branchName: ->\n          I.head?.ref or \"issue-#{I.number}\"\n\n      return self\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -192,13 +192,13 @@
     },
     "pixie.cson": {
       "path": "pixie.cson",
-      "content": "version: \"0.2.3-pre.1\"\nentryPoint: \"main\"\ndependencies:\n  composition: \"distri/model:v0.1.3\"\n  util: \"distri/util:v0.1.0\"\n",
+      "content": "version: \"0.2.3-pre.2\"\nentryPoint: \"main\"\ndependencies:\n  composition: \"distri/model:v0.1.3\"\n  util: \"distri/util:v0.1.0\"\n",
       "mode": "100644",
       "type": "blob"
     },
     "test/issues.coffee": {
       "path": "test/issues.coffee",
-      "content": "Issues = require \"../issues\"\n\ndescribe \"issues\", ->\n  it \"should be chill\", ->\n    assert Issues()\n\ndescribe \"main\", ->\n  it \"should have stuff\", ->\n    {models:{Issue, Issues}} = require \"../main\"\n\n    assert Issue\n    assert Issues\n",
+      "content": "{models:{Issue, Issues}} = require \"../main\"\n\ndescribe \"issues\", ->\n  it \"should be chill\", ->\n    assert Issues()\n\ndescribe \"main\", ->\n  it \"should have stuff\", ->\n    assert Issue\n    assert Issues\n\ndescribe \"Issue\", ->\n  it \"should have a full description\", ->\n    assert Issue().fullDescription()\n",
       "mode": "100644",
       "type": "blob"
     }
@@ -206,7 +206,7 @@
   "distribution": {
     "issue": {
       "path": "issue",
-      "content": "(function() {\n  var Composition;\n\n  Composition = require(\"composition\");\n\n  module.exports = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    self = Composition(I);\n    self.extend({\n      toString: function() {\n        return I.title;\n      },\n      fullDescription: function() {\n        return \"\" + (self.optionText()) + \"\\n\" + I.html_url + \"\\n\" + I.body;\n      },\n      branchName: function() {\n        var _ref;\n        return ((_ref = I.head) != null ? _ref.ref : void 0) || (\"issue-\" + I.number);\n      }\n    });\n    return self;\n  };\n\n}).call(this);\n",
+      "content": "(function() {\n  var Composition;\n\n  Composition = require(\"composition\");\n\n  module.exports = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    self = Composition(I);\n    self.extend({\n      toString: function() {\n        return I.title;\n      },\n      fullDescription: function() {\n        return \"\" + (self.toString()) + \"\\n\" + I.html_url + \"\\n\" + I.body;\n      },\n      branchName: function() {\n        var _ref;\n        return ((_ref = I.head) != null ? _ref.ref : void 0) || (\"issue-\" + I.number);\n      }\n    });\n    return self;\n  };\n\n}).call(this);\n",
       "type": "blob"
     },
     "issues": {
@@ -221,19 +221,19 @@
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.2.3-pre.1\",\"entryPoint\":\"main\",\"dependencies\":{\"composition\":\"distri/model:v0.1.3\",\"util\":\"distri/util:v0.1.0\"}};",
+      "content": "module.exports = {\"version\":\"0.2.3-pre.2\",\"entryPoint\":\"main\",\"dependencies\":{\"composition\":\"distri/model:v0.1.3\",\"util\":\"distri/util:v0.1.0\"}};",
       "type": "blob"
     },
     "test/issues": {
       "path": "test/issues",
-      "content": "(function() {\n  var Issues;\n\n  Issues = require(\"../issues\");\n\n  describe(\"issues\", function() {\n    return it(\"should be chill\", function() {\n      return assert(Issues());\n    });\n  });\n\n  describe(\"main\", function() {\n    return it(\"should have stuff\", function() {\n      var Issue, _ref;\n      _ref = require(\"../main\").models, Issue = _ref.Issue, Issues = _ref.Issues;\n      assert(Issue);\n      return assert(Issues);\n    });\n  });\n\n}).call(this);\n",
+      "content": "(function() {\n  var Issue, Issues, _ref;\n\n  _ref = require(\"../main\").models, Issue = _ref.Issue, Issues = _ref.Issues;\n\n  describe(\"issues\", function() {\n    return it(\"should be chill\", function() {\n      return assert(Issues());\n    });\n  });\n\n  describe(\"main\", function() {\n    return it(\"should have stuff\", function() {\n      assert(Issue);\n      return assert(Issues);\n    });\n  });\n\n  describe(\"Issue\", function() {\n    return it(\"should have a full description\", function() {\n      return assert(Issue().fullDescription());\n    });\n  });\n\n}).call(this);\n",
       "type": "blob"
     }
   },
   "progenitor": {
     "url": "http://www.danielx.net/editor/"
   },
-  "version": "0.2.3-pre.1",
+  "version": "0.2.3-pre.2",
   "entryPoint": "main",
   "repository": {
     "branch": "master",
