@@ -174,7 +174,7 @@
     },
     "issue.coffee.md": {
       "path": "issue.coffee.md",
-      "content": "Issue\n=====\n\n    Composition = require \"composition\"\n\nA tempest model that wraps issues from github.\n\n    module.exports = (I={}) ->\n      self = Composition(I)\n\n      self.extend\n\nThe option text is what appears in the dropdown menu.\n\n        optionText: ->\n          \"#{I.title}\"\n\n        fullDescription: ->\n          \"\"\"\n            #{self.optionText()}\n            #{I.html_url}\n            #{I.body}\n          \"\"\"\n\nA helper method to get a standard branch name for an issue. Pull requests have\ntheir own branches, but an issue branch is generated based on issue number.\n\n        branchName: ->\n          I.head?.ref or \"issue-#{I.number}\"\n\n      return self\n",
+      "content": "Issue\n=====\n\n    Composition = require \"composition\"\n\nA tempest model that wraps issues from github.\n\n    module.exports = (I={}) ->\n      self = Composition(I)\n\n      self.extend\n\nThis is what appears in the dropdown menu.\n\n        toString: ->\n          I.title\n\n        fullDescription: ->\n          \"\"\"\n            #{self.optionText()}\n            #{I.html_url}\n            #{I.body}\n          \"\"\"\n\nA helper method to get a standard branch name for an issue. Pull requests have\ntheir own branches, but an issue branch is generated based on issue number.\n\n        branchName: ->\n          I.head?.ref or \"issue-#{I.number}\"\n\n      return self\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -186,19 +186,13 @@
     },
     "main.coffee.md": {
       "path": "main.coffee.md",
-      "content": "Our main entry point which exports all of our Issue models and templates.\n\n    module.exports =\n      models:\n        Issue: require(\"./issue\")\n        Issues: require(\"./issues\")\n      templates:\n        issues: require(\"./templates/issues\")\n",
+      "content": "Our main entry point which exports all of our Issue models and templates.\n\n    module.exports =\n      models:\n        Issue: require(\"./issue\")\n        Issues: require(\"./issues\")\n",
       "mode": "100644",
       "type": "blob"
     },
     "pixie.cson": {
       "path": "pixie.cson",
-      "content": "version: \"0.2.2\"\nentryPoint: \"main\"\ndependencies:\n  composition: \"distri/model:v0.1.3\"\n  util: \"distri/util:v0.1.0\"\n",
-      "mode": "100644",
-      "type": "blob"
-    },
-    "templates/issues.haml.md": {
-      "path": "templates/issues.haml.md",
-      "content": "A simple select element to allow choosing of issues.\n\n    %select(value=@currentIssue)\n      %option= \"- Default Branch -\"\n      - each @issues, ->\n        %option= @optionText()\n",
+      "content": "version: \"0.2.3-pre.0\"\nentryPoint: \"main\"\ndependencies:\n  composition: \"distri/model:v0.1.3\"\n  util: \"distri/util:v0.1.0\"\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -212,7 +206,7 @@
   "distribution": {
     "issue": {
       "path": "issue",
-      "content": "(function() {\n  var Composition;\n\n  Composition = require(\"composition\");\n\n  module.exports = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    self = Composition(I);\n    self.extend({\n      optionText: function() {\n        return \"\" + I.title;\n      },\n      fullDescription: function() {\n        return \"\" + (self.optionText()) + \"\\n\" + I.html_url + \"\\n\" + I.body;\n      },\n      branchName: function() {\n        var _ref;\n        return ((_ref = I.head) != null ? _ref.ref : void 0) || (\"issue-\" + I.number);\n      }\n    });\n    return self;\n  };\n\n}).call(this);\n",
+      "content": "(function() {\n  var Composition;\n\n  Composition = require(\"composition\");\n\n  module.exports = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    self = Composition(I);\n    self.extend({\n      toString: function() {\n        return I.title;\n      },\n      fullDescription: function() {\n        return \"\" + (self.optionText()) + \"\\n\" + I.html_url + \"\\n\" + I.body;\n      },\n      branchName: function() {\n        var _ref;\n        return ((_ref = I.head) != null ? _ref.ref : void 0) || (\"issue-\" + I.number);\n      }\n    });\n    return self;\n  };\n\n}).call(this);\n",
       "type": "blob"
     },
     "issues": {
@@ -222,34 +216,24 @@
     },
     "main": {
       "path": "main",
-      "content": "(function() {\n  module.exports = {\n    models: {\n      Issue: require(\"./issue\"),\n      Issues: require(\"./issues\")\n    },\n    templates: {\n      issues: require(\"./templates/issues\")\n    }\n  };\n\n}).call(this);\n",
+      "content": "(function() {\n  module.exports = {\n    models: {\n      Issue: require(\"./issue\"),\n      Issues: require(\"./issues\")\n    }\n  };\n\n}).call(this);\n",
       "type": "blob"
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.2.2\",\"entryPoint\":\"main\",\"dependencies\":{\"composition\":\"distri/model:v0.1.3\",\"util\":\"distri/util:v0.1.0\"}};",
-      "type": "blob"
-    },
-    "templates/issues": {
-      "path": "templates/issues",
-      "content": "Runtime = require(\"/lib/_hamljr_runtime\");\n\nmodule.exports = (function(data) {\n  return (function() {\n    var __runtime;\n    __runtime = Runtime(this);\n    __runtime.push(document.createDocumentFragment());\n    __runtime.push(document.createElement(\"select\"));\n    __runtime.attribute(\"value\", this.currentIssue);\n    __runtime.push(document.createElement(\"option\"));\n    __runtime.text(\"- Default Branch -\");\n    __runtime.pop();\n    __runtime.each(this.issues, function() {\n      __runtime.push(document.createElement(\"option\"));\n      __runtime.text(this.optionText());\n      return __runtime.pop();\n    });\n    __runtime.pop();\n    return __runtime.pop();\n  }).call(data);\n});\n",
+      "content": "module.exports = {\"version\":\"0.2.3-pre.0\",\"entryPoint\":\"main\",\"dependencies\":{\"composition\":\"distri/model:v0.1.3\",\"util\":\"distri/util:v0.1.0\"}};",
       "type": "blob"
     },
     "test/issues": {
       "path": "test/issues",
       "content": "(function() {\n  var Issues;\n\n  Issues = require(\"../issues\");\n\n  describe(\"issues\", function() {\n    return it(\"should be chill\", function() {\n      return assert(Issues());\n    });\n  });\n\n  describe(\"main\", function() {\n    return it(\"should have stuff\", function() {\n      var Issue, _ref;\n      _ref = require(\"../main\").models, Issue = _ref.Issue, Issues = _ref.Issues;\n      assert(Issue);\n      return assert(Issues);\n    });\n  });\n\n}).call(this);\n",
       "type": "blob"
-    },
-    "lib/_hamljr_runtime": {
-      "path": "lib/_hamljr_runtime",
-      "content": "(function() {\n  var Runtime, document, eventNames, isEvent, isFragment,\n    __slice = [].slice;\n\n  if (typeof window !== \"undefined\" && window !== null) {\n    document = window.document;\n  } else {\n    document = global.document;\n  }\n\n  eventNames = \"abort\\nerror\\nresize\\nscroll\\nselect\\nsubmit\\nchange\\nreset\\nfocus\\nblur\\nclick\\ndblclick\\nkeydown\\nkeypress\\nkeyup\\nload\\nunload\\nmousedown\\nmousemove\\nmouseout\\nmouseover\\nmouseup\\ndrag\\ndragend\\ndragenter\\ndragleave\\ndragover\\ndragstart\\ndrop\".split(\"\\n\");\n\n  isEvent = function(name) {\n    return eventNames.indexOf(name) !== -1;\n  };\n\n  isFragment = function(node) {\n    return node.nodeType === 11;\n  };\n\n  Runtime = function(context) {\n    var append, bindObservable, classes, id, lastParent, observeAttribute, observeText, pop, push, render, self, stack, top;\n    stack = [];\n    lastParent = function() {\n      var element, i;\n      i = stack.length - 1;\n      while ((element = stack[i]) && isFragment(element)) {\n        i -= 1;\n      }\n      return element;\n    };\n    top = function() {\n      return stack[stack.length - 1];\n    };\n    append = function(child) {\n      var parent, _ref;\n      parent = top();\n      if (parent && isFragment(child) && child.childNodes.length === 1) {\n        child = child.childNodes[0];\n      }\n      if ((_ref = top()) != null) {\n        _ref.appendChild(child);\n      }\n      return child;\n    };\n    push = function(child) {\n      return stack.push(child);\n    };\n    pop = function() {\n      return append(stack.pop());\n    };\n    render = function(child) {\n      push(child);\n      return pop();\n    };\n    bindObservable = function(element, value, update) {\n      var observable, observe, unobserve;\n      if (typeof Observable === \"undefined\" || Observable === null) {\n        update(value);\n        return;\n      }\n      observable = Observable(value);\n      observe = function() {\n        observable.observe(update);\n        return update(observable());\n      };\n      unobserve = function() {\n        return observable.stopObserving(update);\n      };\n      element.addEventListener(\"DOMNodeInserted\", observe, true);\n      element.addEventListener(\"DOMNodeRemoved\", unobserve, true);\n      return element;\n    };\n    id = function() {\n      var element, sources, update, value;\n      sources = 1 <= arguments.length ? __slice.call(arguments, 0) : [];\n      element = top();\n      update = function(newValue) {\n        if (typeof newValue === \"function\") {\n          newValue = newValue();\n        }\n        return element.id = newValue;\n      };\n      value = function() {\n        var possibleValues;\n        possibleValues = sources.map(function(source) {\n          if (typeof source === \"function\") {\n            return source();\n          } else {\n            return source;\n          }\n        }).filter(function(idValue) {\n          return idValue != null;\n        });\n        return possibleValues[possibleValues.length - 1];\n      };\n      return bindObservable(element, value, update);\n    };\n    classes = function() {\n      var element, sources, update, value;\n      sources = 1 <= arguments.length ? __slice.call(arguments, 0) : [];\n      element = top();\n      update = function(newValue) {\n        if (typeof newValue === \"function\") {\n          newValue = newValue();\n        }\n        return element.className = newValue;\n      };\n      value = function() {\n        var possibleValues;\n        possibleValues = sources.map(function(source) {\n          if (typeof source === \"function\") {\n            return source();\n          } else {\n            return source;\n          }\n        }).filter(function(sourceValue) {\n          return sourceValue != null;\n        });\n        return possibleValues.join(\" \");\n      };\n      return bindObservable(element, value, update);\n    };\n    observeAttribute = function(name, value) {\n      var element, update;\n      element = top();\n      if ((name === \"value\") && (typeof value === \"function\")) {\n        element.value = value();\n        element.onchange = function() {\n          return value(element.value);\n        };\n        if (value.observe) {\n          value.observe(function(newValue) {\n            return element.value = newValue;\n          });\n        }\n      } else if (name.match(/^on/) && isEvent(name.substr(2))) {\n        element[name] = value;\n      } else if (isEvent(name)) {\n        element[\"on\" + name] = value;\n      } else {\n        update = function(newValue) {\n          return element.setAttribute(name, newValue);\n        };\n        bindObservable(element, value, update);\n      }\n      return element;\n    };\n    observeText = function(value) {\n      var element, update;\n      switch (value != null ? value.nodeType : void 0) {\n        case 1:\n        case 3:\n        case 11:\n          return render(value);\n      }\n      element = document.createTextNode('');\n      update = function(newValue) {\n        return element.nodeValue = newValue;\n      };\n      bindObservable(element, value, update);\n      return render(element);\n    };\n    self = {\n      push: push,\n      pop: pop,\n      id: id,\n      classes: classes,\n      attribute: observeAttribute,\n      text: observeText,\n      filter: function(name, content) {},\n      each: function(items, fn) {\n        var elements, parent, replace;\n        items = Observable(items);\n        elements = null;\n        parent = lastParent();\n        items.observe(function(newItems) {\n          return replace(elements, newItems);\n        });\n        replace = function(oldElements, items) {\n          elements = [];\n          items.forEach(function(item, index, array) {\n            var element;\n            element = fn.call(item, item, index, array);\n            if (isFragment(element)) {\n              elements.push.apply(elements, element.childNodes);\n            } else {\n              elements.push(element);\n            }\n            parent.appendChild(element);\n            return element;\n          });\n          return oldElements != null ? oldElements.forEach(function(element) {\n            return element.remove();\n          }) : void 0;\n        };\n        return replace(null, items);\n      }\n    };\n    return self;\n  };\n\n  module.exports = Runtime;\n\n}).call(this);\n",
-      "type": "blob"
     }
   },
   "progenitor": {
     "url": "http://www.danielx.net/editor/"
   },
-  "version": "0.2.2",
+  "version": "0.2.3-pre.0",
   "entryPoint": "main",
   "repository": {
     "branch": "master",
