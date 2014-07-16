@@ -4,5 +4,3 @@ Our main entry point which exports all of our Issue models and templates.
       models:
         Issue: require("./issue")
         Issues: require("./issues")
-      templates:
-        issues: require("./templates/issues")

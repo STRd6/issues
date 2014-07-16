@@ -10,10 +10,10 @@ A tempest model that wraps issues from github.
 
       self.extend
 
-The option text is what appears in the dropdown menu.
+This is what appears in the dropdown menu.
 
-        optionText: ->
-          "#{I.title}"
+        toString: ->
+          I.title
 
         fullDescription: ->
           """
