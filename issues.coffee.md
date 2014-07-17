@@ -12,6 +12,10 @@ selected issue.
 We may want to formalize this collection pattern later, but for now lets just
 see how it goes.
 
+    nullIssue =
+      toString: ->
+        "- Default Branch -"
+
     Issues = (I={}) ->
       defaults I,
         issues: []
@@ -32,9 +36,14 @@ The reset method accepts an array of raw issue data, converts it into an array
 of issue objects, replaces the previous issues with the new ones and clears the
 selected issue.
 
+        # TODO: We should be able to do this purely functionally
+        # composing the null issue with whatever the issues happen to be
         reset: (issueData) ->
-          self.currentIssue(undefined)
-          self.issues issueData.map(Issue)
+          self.currentIssue(nullIssue)
+
+          self.issues [nullIssue].concat issueData.map(Issue)
+
+      self.reset I.issues
 
       return self
 
