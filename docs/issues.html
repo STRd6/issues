@@ -53,7 +53,11 @@ selected issue.</p>
 see how it goes.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">Issues</span></span> = (I={}) -&gt;
+            <div class="content"><pre><code class="lang-coffeescript">nullIssue =
+  toString: -&gt;
+    <span class="string">"- Default Branch -"</span>
+
+<span class="function"><span class="title">Issues</span></span> = (I={}) -&gt;
   defaults I,
     issues: []
 
@@ -100,9 +104,14 @@ of issue objects, replaces the previous issues with the new ones and clears the
 selected issue.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">    reset: (issueData) -&gt;
-      self.currentIssue(<span class="literal">undefined</span>)
-      self.issues issueData.map(Issue)
+            <div class="content"><pre><code class="lang-coffeescript">    <span class="comment"># TODO: We should be able to do this purely functionally</span>
+    <span class="comment"># composing the null issue with whatever the issues happen to be</span>
+    reset: (issueData) -&gt;
+      self.currentIssue(nullIssue)
+
+      self.issues [nullIssue].concat issueData.map(Issue)
+
+  self.reset I.issues
 
   <span class="keyword">return</span> self
 

@@ -14,7 +14,7 @@ window["distri/issues:master"]({
     },
     "issues.coffee.md": {
       "path": "issues.coffee.md",
-      "content": "Issues\n======\n\n    Composition = require \"composition\"\n    {defaults} = require \"util\"\n\n    Issue = require \"./issue\"\n\nA collection of issues including a `currentIssue` to represent the actively\nselected issue.\n\nWe may want to formalize this collection pattern later, but for now lets just\nsee how it goes.\n\n    Issues = (I={}) ->\n      defaults I,\n        issues: []\n\n      self = Composition(I)\n\nOur `issues` method is a list of `Issue` models.\n\n      self.attrModels \"issues\", Issue\n\nWe want to expose the currently selected issue as an observable as well.\n\n      self.attrObservable \"currentIssue\"\n\n      self.extend\n\nThe reset method accepts an array of raw issue data, converts it into an array\nof issue objects, replaces the previous issues with the new ones and clears the\nselected issue.\n\n        reset: (issueData) ->\n          self.currentIssue(undefined)\n          self.issues issueData.map(Issue)\n\n      return self\n\n    module.exports = Issues\n",
+      "content": "Issues\n======\n\n    Composition = require \"composition\"\n    {defaults} = require \"util\"\n\n    Issue = require \"./issue\"\n\nA collection of issues including a `currentIssue` to represent the actively\nselected issue.\n\nWe may want to formalize this collection pattern later, but for now lets just\nsee how it goes.\n\n    nullIssue =\n      toString: ->\n        \"- Default Branch -\"\n\n    Issues = (I={}) ->\n      defaults I,\n        issues: []\n\n      self = Composition(I)\n\nOur `issues` method is a list of `Issue` models.\n\n      self.attrModels \"issues\", Issue\n\nWe want to expose the currently selected issue as an observable as well.\n\n      self.attrObservable \"currentIssue\"\n\n      self.extend\n\nThe reset method accepts an array of raw issue data, converts it into an array\nof issue objects, replaces the previous issues with the new ones and clears the\nselected issue.\n\n        # TODO: We should be able to do this purely functionally\n        # composing the null issue with whatever the issues happen to be\n        reset: (issueData) ->\n          self.currentIssue(nullIssue)\n\n          self.issues [nullIssue].concat issueData.map(Issue)\n\n      self.reset I.issues\n\n      return self\n\n    module.exports = Issues\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -26,13 +26,13 @@ window["distri/issues:master"]({
     },
     "pixie.cson": {
       "path": "pixie.cson",
-      "content": "version: \"0.2.3-pre.2\"\nentryPoint: \"main\"\ndependencies:\n  composition: \"distri/model:v0.1.3\"\n  util: \"distri/util:v0.1.0\"\n",
+      "content": "version: \"0.2.3-pre.3\"\nentryPoint: \"main\"\ndependencies:\n  composition: \"distri/model:v0.1.3\"\n  util: \"distri/util:v0.1.0\"\n",
       "mode": "100644",
       "type": "blob"
     },
     "test/issues.coffee": {
       "path": "test/issues.coffee",
-      "content": "{models:{Issue, Issues}} = require \"../main\"\n\ndescribe \"issues\", ->\n  it \"should be chill\", ->\n    assert Issues()\n\ndescribe \"main\", ->\n  it \"should have stuff\", ->\n    assert Issue\n    assert Issues\n\ndescribe \"Issue\", ->\n  it \"should have a full description\", ->\n    assert Issue().fullDescription()\n",
+      "content": "{models:{Issue, Issues}} = require \"../main\"\n\ndescribe \"issues\", ->\n  it \"should be chill\", ->\n    assert Issues()\n  \n  it \"should have a default null Issue\", ->\n    assert Issues().issues.size() is 1\n\ndescribe \"main\", ->\n  it \"should have stuff\", ->\n    assert Issue\n    assert Issues\n\ndescribe \"Issue\", ->\n  it \"should have a full description\", ->\n    assert Issue().fullDescription()\n",
       "mode": "100644",
       "type": "blob"
     }
@@ -45,7 +45,7 @@ window["distri/issues:master"]({
     },
     "issues": {
       "path": "issues",
-      "content": "(function() {\n  var Composition, Issue, Issues, defaults;\n\n  Composition = require(\"composition\");\n\n  defaults = require(\"util\").defaults;\n\n  Issue = require(\"./issue\");\n\n  Issues = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    defaults(I, {\n      issues: []\n    });\n    self = Composition(I);\n    self.attrModels(\"issues\", Issue);\n    self.attrObservable(\"currentIssue\");\n    self.extend({\n      reset: function(issueData) {\n        self.currentIssue(void 0);\n        return self.issues(issueData.map(Issue));\n      }\n    });\n    return self;\n  };\n\n  module.exports = Issues;\n\n}).call(this);\n",
+      "content": "(function() {\n  var Composition, Issue, Issues, defaults, nullIssue;\n\n  Composition = require(\"composition\");\n\n  defaults = require(\"util\").defaults;\n\n  Issue = require(\"./issue\");\n\n  nullIssue = {\n    toString: function() {\n      return \"- Default Branch -\";\n    }\n  };\n\n  Issues = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    defaults(I, {\n      issues: []\n    });\n    self = Composition(I);\n    self.attrModels(\"issues\", Issue);\n    self.attrObservable(\"currentIssue\");\n    self.extend({\n      reset: function(issueData) {\n        self.currentIssue(nullIssue);\n        return self.issues([nullIssue].concat(issueData.map(Issue)));\n      }\n    });\n    self.reset(I.issues);\n    return self;\n  };\n\n  module.exports = Issues;\n\n}).call(this);\n",
       "type": "blob"
     },
     "main": {
@@ -55,19 +55,19 @@ window["distri/issues:master"]({
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.2.3-pre.2\",\"entryPoint\":\"main\",\"dependencies\":{\"composition\":\"distri/model:v0.1.3\",\"util\":\"distri/util:v0.1.0\"}};",
+      "content": "module.exports = {\"version\":\"0.2.3-pre.3\",\"entryPoint\":\"main\",\"dependencies\":{\"composition\":\"distri/model:v0.1.3\",\"util\":\"distri/util:v0.1.0\"}};",
       "type": "blob"
     },
     "test/issues": {
       "path": "test/issues",
-      "content": "(function() {\n  var Issue, Issues, _ref;\n\n  _ref = require(\"../main\").models, Issue = _ref.Issue, Issues = _ref.Issues;\n\n  describe(\"issues\", function() {\n    return it(\"should be chill\", function() {\n      return assert(Issues());\n    });\n  });\n\n  describe(\"main\", function() {\n    return it(\"should have stuff\", function() {\n      assert(Issue);\n      return assert(Issues);\n    });\n  });\n\n  describe(\"Issue\", function() {\n    return it(\"should have a full description\", function() {\n      return assert(Issue().fullDescription());\n    });\n  });\n\n}).call(this);\n",
+      "content": "(function() {\n  var Issue, Issues, _ref;\n\n  _ref = require(\"../main\").models, Issue = _ref.Issue, Issues = _ref.Issues;\n\n  describe(\"issues\", function() {\n    it(\"should be chill\", function() {\n      return assert(Issues());\n    });\n    return it(\"should have a default null Issue\", function() {\n      return assert(Issues().issues.size() === 1);\n    });\n  });\n\n  describe(\"main\", function() {\n    return it(\"should have stuff\", function() {\n      assert(Issue);\n      return assert(Issues);\n    });\n  });\n\n  describe(\"Issue\", function() {\n    return it(\"should have a full description\", function() {\n      return assert(Issue().fullDescription());\n    });\n  });\n\n}).call(this);\n",
       "type": "blob"
     }
   },
   "progenitor": {
     "url": "http://www.danielx.net/editor/"
   },
-  "version": "0.2.3-pre.2",
+  "version": "0.2.3-pre.3",
   "entryPoint": "main",
   "repository": {
     "branch": "master",
