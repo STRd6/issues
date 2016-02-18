@@ -70,7 +70,7 @@
   "version": "0.2.3",
   "entryPoint": "main",
   "repository": {
-    "branch": "master",
+    "branch": "v0.2.3",
     "default_branch": "master",
     "full_name": "distri/issues",
     "homepage": null,
